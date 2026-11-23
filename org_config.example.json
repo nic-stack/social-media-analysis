@@ -1,0 +1,25 @@
+{
+  "event_roundup_terms": "upcoming city networking",
+  "promo_terms": "example tuition offer",
+  "graduation_terms": "#example20\\d\\d",
+  "welcome_terms": "welcome to example college",
+  "culture_headline_terms": "go mascots|^#weareexample",
+  "campus_life_hashtag": "lifeatexample",
+  "campus_life_terms": "lifeatexample|life at example",
+  "event_domains": [
+    "example.zoom.us"
+  ],
+  "org_domain": "example.edu",
+  "programs": [
+    {
+      "name": "Data Analytics",
+      "pattern": "data analytics|data science",
+      "area": "STEM"
+    },
+    {
+      "name": "Nursing",
+      "pattern": "nursing|\\bnurse",
+      "area": "Health sciences"
+    }
+  ]
+}

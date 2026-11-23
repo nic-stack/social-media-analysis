@@ -1,0 +1,8 @@
+raw/
+prepared/
+outputs/
+org_config.json
+.DS_Store
+__pycache__/
+*.pyc
+.venv/

@@ -1,0 +1,14 @@
+format,network,posts,median_reach,median_interactions,median_interaction_rate_%,median_saves,median_shares,small_sample,kruskal_p_volume,kruskal_p_rate,median_impressions,median_clicks
+Carousel/Multi-image,instagram,98,1100.5,78.5,6.6,2.0,4.0,False,5.387744926280497e-13,6.74276623873187e-14,,
+Single image,instagram,128,664.0,23.0,3.69,1.0,1.0,False,5.387744926280497e-13,6.74276623873187e-14,,
+Unknown/Generic,instagram,64,1098.0,57.5,5.31,2.0,3.0,False,5.387744926280497e-13,6.74276623873187e-14,,
+Video/Reel,instagram,44,1039.0,50.5,4.41,2.5,3.0,False,5.387744926280497e-13,6.74276623873187e-14,,
+Carousel/Multi-image,facebook,85,,14.0,1.45,,,False,9.757929660759833e-13,1.2626755259408818e-07,854.0,
+Link/Article,facebook,158,,6.5,1.36,,,False,9.757929660759833e-13,1.2626755259408818e-07,451.0,
+Single image,facebook,96,,3.0,0.86,,,False,9.757929660759833e-13,1.2626755259408818e-07,354.0,
+Unknown/Generic,facebook,26,,9.0,2.19,,,False,9.757929660759833e-13,1.2626755259408818e-07,422.0,
+Video/Reel,facebook,13,,5.0,1.1,,,False,9.757929660759833e-13,1.2626755259408818e-07,526.5,
+Carousel/Multi-image,linkedin,89,,60.0,3.78,,,False,2.852019021282916e-10,0.014981942806696272,1617.0,387.5
+Single image,linkedin,189,,29.0,3.37,,,False,2.852019021282916e-10,0.014981942806696272,864.0,33.0
+Unknown/Generic,linkedin,52,,34.0,3.15,,,False,2.852019021282916e-10,0.014981942806696272,1187.5,67.0
+Video/Reel,linkedin,11,,28.0,3.75,,,False,2.852019021282916e-10,0.014981942806696272,1030.0,63.0
