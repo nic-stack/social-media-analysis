@@ -62,7 +62,7 @@ I started with a post-level export of 3,252 records plus daily profile metrics, 
 
 | Problem | Why it matters | What I did |
 |---|---|---|
-| 63% of records were Stories | They behave differently from feed posts | Analyzed them separately |
+| 66% of records were Stories | They behave differently from feed posts | Analyzed them separately |
 | 47 "dark" posts (ad versions never shown on the page) | They inflate post counts and are not organic | Removed them |
 | 35 Facebook posts with zero recorded impressions | They break rates and drag medians down | Left out of impression and rate measures |
 | Posts published just before the export | They had not finished collecting results | Removed posts under 14 days old |
