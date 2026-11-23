@@ -2,9 +2,11 @@
 
 A performance analysis of the Instagram, LinkedIn and Facebook accounts I managed for a higher-education brand. It covers **1,053 organic feed posts** from January 2025 to October 2026 and asks what to post, where, and when.
 
-> The brand name and raw data are kept private. This repository shares the code, charts and aggregated results.
+> The brand name and raw data are kept private. This repository shares the code, charts, aggregated results and an anonymized dashboard with no captions, links, IDs, exact dates or follower counts.
 
-**Tools:** Python (pandas, SciPy, matplotlib)
+**[Open the interactive dashboard](https://nic-stack.github.io/social-media-analysis/)**
+
+**Tools:** Python (pandas, SciPy, matplotlib), JavaScript (Chart.js)
 
 ## Questions
 
@@ -63,6 +65,9 @@ scripts/
   analyze.py             topics, formats, Instagram decline, timing, growth
   same_post.py           matched cross-platform comparison
   platform_overview.py   platform summary
+  build_dashboard.py     builds the anonymized dashboard
+  dashboard_template.html
+docs/index.html          interactive dashboard (Chart.js, MIT license, included)
 results/charts/          charts
 results/tables/          aggregated results
 org_config.example.json  template for organization-specific terms

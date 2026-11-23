@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Social Media Performance Dashboard</title>
+<script>/*__CHARTJS__*/</script>
+<style>
+:root{--bg:#F2F3F8;--card:#fff;--ink:#1B1F3B;--ink2:#2B2F5B;--muted:#6B7085;--line:#E3E5EE;
+--ig:#C13584;--li:#0A66C2;--fb:#5B8FE0;--good:#2E9E6B;--bad:#D1495B;--gap:16px;--r:10px}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;background:var(--bg);color:var(--ink);line-height:1.45;font-size:14px}
+.wrap{max-width:1440px;margin:0 auto;padding:var(--gap)}
+header{background:var(--ink);color:#fff;border-radius:var(--r);padding:18px 22px;margin-bottom:var(--gap)}
+header h1{font-size:21px;font-weight:650}
+header .sub{color:#B9C1E3;font-size:13px;margin-top:2px}
+.filters{display:flex;flex-wrap:wrap;gap:14px 18px;margin-top:14px;align-items:flex-end}
+.fg{display:flex;flex-direction:column;gap:4px}
+.fg label,.fg .lbl{font-size:11px;text-transform:uppercase;letter-spacing:.5px;color:#B9C1E3}
+.fg select,.fg input[type=date]{padding:6px 9px;border-radius:6px;border:1px solid rgba(255,255,255,.25);background:rgba(255,255,255,.1);color:#fff;font-size:13px}
+.fg select option{background:var(--ink);color:#fff}
+.chk{display:flex;gap:10px}
+.chk label{display:flex;align-items:center;gap:5px;font-size:13px;color:#fff;text-transform:none;letter-spacing:0;cursor:pointer}
+.dot{width:10px;height:10px;border-radius:50%;display:inline-block}
+button.reset{padding:7px 12px;border-radius:6px;border:1px solid rgba(255,255,255,.35);background:transparent;color:#fff;cursor:pointer;font-size:13px}
+button.reset:hover{background:rgba(255,255,255,.12)}
+.status{font-size:12px;color:#B9C1E3;margin-left:auto}
+nav{display:flex;gap:6px;margin-bottom:var(--gap);flex-wrap:wrap}
+nav button{border:none;background:var(--card);padding:10px 16px;border-radius:8px;font-size:14px;cursor:pointer;color:var(--ink);box-shadow:0 1px 2px rgba(0,0,0,.06)}
+nav button.on{background:var(--ink2);color:#fff}
+.tab{display:none}.tab.on{display:block}
+.grid{display:grid;gap:var(--gap);margin-bottom:var(--gap)}
+.g2{grid-template-columns:repeat(auto-fit,minmax(460px,1fr))}
+.g3{grid-template-columns:repeat(auto-fit,minmax(320px,1fr))}
+.card{background:var(--card);border-radius:var(--r);padding:18px 20px;box-shadow:0 1px 3px rgba(0,0,0,.07);min-width:0}
+.card h3{font-size:15px;font-weight:650;margin-bottom:4px}
+.card .note{font-size:12px;color:var(--muted);margin-bottom:12px}
+.cw{position:relative;height:300px}.cw.tall{height:380px}
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:var(--gap);margin-bottom:var(--gap)}
+.kpi h4{font-size:15px;display:flex;align-items:center;gap:8px;margin-bottom:10px}
+.kpi .row{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+.kpi .v{font-size:22px;font-weight:700}.kpi .k{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.4px}
+.callout{background:#EEF1FB;border-radius:8px;padding:12px 14px;font-size:14px;margin-top:10px}
+table{width:100%;border-collapse:collapse;font-size:13px}
+th{text-align:left;font-size:11px;text-transform:uppercase;letter-spacing:.4px;color:var(--muted);padding:8px 10px;border-bottom:2px solid var(--line);white-space:nowrap;user-select:none}
+th.s{cursor:pointer}th.s:hover{color:var(--ink)}
+td{padding:8px 10px;border-bottom:1px solid #F0F1F6;vertical-align:top}
+td.n,th.n{text-align:right;font-variant-numeric:tabular-nums}
+tr.click{cursor:pointer}tr.click:hover td{background:#F7F8FC}
+.hm td.c{text-align:center;font-weight:600;border:2px solid #fff;border-radius:4px}
+.hm td.c small{font-weight:400;opacity:.8;font-size:11px}
+.pill{display:inline-block;padding:1px 8px;border-radius:10px;font-size:11px;color:#fff}
+.tools{display:flex;gap:10px;align-items:center;margin-bottom:12px;flex-wrap:wrap}
+.tools input[type=search]{flex:1;min-width:220px;padding:8px 10px;border:1px solid var(--line);border-radius:6px;font-size:14px}
+.tools select,.tools button{padding:7px 10px;border:1px solid var(--line);border-radius:6px;background:#fff;font-size:13px;cursor:pointer}
+.pager{display:flex;gap:8px;align-items:center;justify-content:flex-end;margin-top:10px;font-size:13px;color:var(--muted)}
+.pager button{padding:5px 10px;border:1px solid var(--line);border-radius:6px;background:#fff;cursor:pointer}
+a{color:var(--li)}
+details{background:var(--card);border-radius:var(--r);padding:14px 20px;box-shadow:0 1px 3px rgba(0,0,0,.07)}
+details summary{cursor:pointer;font-weight:650}
+details ul{margin:10px 0 0 18px;font-size:13px;color:#3A3F57}details li{margin-bottom:4px}
+.empty{color:var(--muted);font-size:13px;padding:30px 0;text-align:center}
+@media print{nav,.filters,.tools,.pager{display:none}.tab{display:block!important;break-inside:avoid}body{background:#fff}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header>
+  <h1>Social Media Performance Dashboard</h1>
+  <div class="sub">Organic feed posts on Instagram, LinkedIn &amp; Facebook · Jan 2025 – Oct 2026 · Higher-education brand, anonymized</div>
+  <div class="filters">
+    <div class="fg"><label for="fFrom">From</label><select id="fFrom"></select></div>
+    <div class="fg"><label for="fTo">To</label><select id="fTo"></select></div>
+    <div class="fg"><span class="lbl">Platforms</span><div class="chk" id="fNets"></div></div>
+    <div class="fg"><label for="fTopic">Topic</label><select id="fTopic"></select></div>
+    <div class="fg"><label for="fFormat">Format</label><select id="fFormat"></select></div>
+    <div class="fg"><label for="fStudent">Student-focused</label><select id="fStudent"><option value="all">All posts</option><option value="yes">Yes</option><option value="no">No</option></select></div>
+    <button class="reset" id="reset">Reset filters</button>
+    <span class="status" id="status"></span>
+  </div>
+</header>
+
+<nav id="nav">
+  <button data-t="ov" class="on">Overview</button>
+  <button data-t="pl">Platform comparison</button>
+  <button data-t="tp">Topics</button>
+  <button data-t="ft">Formats &amp; timing</button>
+  <button data-t="ex">Post explorer</button>
+</nav>
+
+<!-- OVERVIEW -->
+<section class="tab on" id="t-ov">
+  <div class="kpis" id="kpis"></div>
+  <div class="grid g2">
+    <div class="card"><h3>Feed posts per month</h3><div class="note">Responds to all filters.</div><div class="cw"><canvas id="cPosts"></canvas></div></div>
+    <div class="card"><h3>Median impressions per post, by month</h3><div class="note">Responds to all filters. Months with fewer than 3 posts are hidden.</div><div class="cw"><canvas id="cTrend"></canvas></div></div>
+    <div class="card"><h3>Monthly follower growth rate</h3><div class="note">From daily follower balances. Responds to date and platform filters only.</div><div class="cw"><canvas id="cFol"></canvas></div></div>
+    <div class="card"><h3>Share of followers in the United States</h3><div class="note">Follower location only, not student status. LinkedIn not available for the full period.</div><div class="cw"><canvas id="cUS"></canvas></div></div>
+  </div>
+</section>
+
+<!-- PLATFORM -->
+<section class="tab" id="t-pl">
+  <div class="grid g2">
+    <div class="card"><h3>Median impressions per post</h3><div class="note">Typical post on each platform under current filters.</div><div class="cw"><canvas id="cPlImp"></canvas></div></div>
+    <div class="card"><h3>Median interactions &amp; interaction rate</h3><div class="note">Interactions = likes + comments + shares. Rate = interactions ÷ impressions (per post, median).</div><div class="cw"><canvas id="cPlInt"></canvas></div></div>
+  </div>
+  <div class="grid g2">
+    <div class="card"><h3>Same post: Instagram vs LinkedIn</h3>
+      <div class="tools" style="margin:6px 0 4px"><select id="spMetric"><option value="i">Impressions</option><option value="x">Interactions</option></select></div>
+      <div class="note">Each dot is one post published to both platforms (matched by the scheduling tool’s group ID). Above the diagonal = Instagram did better. Hover for details.</div>
+      <div class="cw tall"><canvas id="cSP"></canvas></div><div class="callout" id="spSum"></div></div>
+    <div class="card"><h3>Which platform won? Posts published on all three</h3><div class="note">Share of matched posts where each platform had the highest value.</div>
+      <div class="cw"><canvas id="cWin"></canvas></div></div>
+  </div>
+  <div class="card"><h3>Same post by topic (Instagram vs LinkedIn)</h3><div class="note">Topic = the topic most posts in the group were assigned. “Small” = fewer than 10 matched posts — directional only.</div>
+    <div style="overflow-x:auto"><table id="spTopic"></table></div></div>
+</section>
+
+<!-- TOPICS -->
+<section class="tab" id="t-tp">
+  <div class="card" style="margin-bottom:var(--gap)">
+    <h3>Topic × platform</h3>
+    <div class="tools" style="margin:6px 0 4px"><label for="hmMetric" style="font-size:13px;color:var(--muted)">Measure</label>
+      <select id="hmMetric"><option value="i">Median impressions</option><option value="x">Median interactions</option><option value="rate">Median interaction rate</option></select></div>
+    <div class="note">Darker = stronger within that platform (compare down each column, not across). “—” = fewer than 5 posts. Click a row to filter the dashboard to that topic.</div>
+    <div style="overflow-x:auto"><table class="hm" id="hm"></table></div>
+  </div>
+  <div class="grid g2">
+    <div class="card"><h3>Student-focused vs other posts</h3><div class="note">Median impressions per post.</div><div class="cw"><canvas id="cStu"></canvas></div></div>
+    <div class="card"><h3>Campus life vs other posts</h3><div class="note">Median interaction rate per post.</div><div class="cw"><canvas id="cLak"></canvas></div></div>
+  </div>
+  <div class="card"><h3>Top 15 posts by impressions (current filters)</h3><div style="overflow-x:auto"><table id="topPosts"></table></div></div>
+</section>
+
+<!-- FORMATS & TIMING -->
+<section class="tab" id="t-ft">
+  <div class="grid g2">
+    <div class="card"><h3>Median impressions by format</h3><div class="note">Formats with fewer than 5 posts on a platform are hidden.</div><div class="cw"><canvas id="cFmt"></canvas></div></div>
+    <div class="card"><h3>Median impressions by weekday</h3><div class="note">Responds to the platform filter only. Weekend posts are rare — treat with caution.</div><div class="cw"><canvas id="cWd"></canvas></div></div>
+  </div>
+  <div class="card"><h3>Weekday × time of day</h3>
+    <div class="tools" style="margin:6px 0 4px"><select id="gridNet"></select></div>
+    <div class="note">Median impressions per post (n = posts). Not affected by filters. Grey cells have fewer than 10 posts.</div>
+    <div style="overflow-x:auto"><table class="hm" id="dtGrid"></table></div></div>
+</section>
+
+<!-- EXPLORER -->
+<section class="tab" id="t-ex">
+  <div class="card">
+    <div class="tools"><button id="csv">Download CSV</button></div>
+    <div style="overflow-x:auto"><table id="ex"></table></div>
+    <div class="pager" id="pager"></div>
+  </div>
+</section>
+
+<details style="margin-top:var(--gap)">
+  <summary>About the data &amp; how to read this dashboard</summary>
+  <ul>
+    <li><b>Posts included:</b> organic feed posts on Instagram, LinkedIn and Facebook from Jan 2025 to Oct 2026, at least 14 days old at export. Excluded: Stories, 47 ad-only (“dark”) posts, TikTok (5 posts), and Facebook posts reporting 0 impressions.</li>
+    <li><b>Interactions</b> = likes + comments + shares on every platform (Instagram saves are not included). <b>Interaction rate</b> = interactions ÷ impressions, calculated per post, then the median.</li>
+    <li><b>Medians, not averages:</b> results are heavily skewed. One LinkedIn post had about 300,000 impressions.</li>
+    <li><b>Platforms define metrics differently.</b> Compare topics and formats within a platform. Cross-platform comparisons are most reliable on the same-post chart.</li>
+    <li><b>Topics and the student-focused flag</b> come from keyword rules applied to captions. They are analysis additions; 88% are high-confidence. Spot-check before quoting exact counts.</li>
+    <li><b>Clicks</b> (LinkedIn, Facebook) include clicks on images and “see more”, not only website visits. Instagram doesn’t report post clicks.</li>
+    <li>Differences show association, not cause: topic, format and timing overlap. Small groups (under 10 posts) are directional only.</li>
+    <li><b>Privacy:</b> captions, links, IDs, exact dates and follower counts are not included in this page.</li>
+    <li>No ad spend, website traffic or application data is included.</li>
+  </ul>
+</details>
+<div style="font-size:12px;color:var(--muted);margin-top:10px" id="foot"></div>
+</div>
+
+<script>
+const DATA = /*__DATA__*/null;
+const NETS = ["instagram","linkedin","facebook"];
+const NAME = {instagram:"Instagram",linkedin:"LinkedIn",facebook:"Facebook"};
+const COL = {instagram:"#C13584",linkedin:"#0A66C2",facebook:"#5B8FE0"};
+const TOPICS = ["Student & alumni stories","Campus life & culture","Graduation & ceremonies","Orientation & welcome","Event promotion & recaps","Research & faculty expertise","Program & admissions promo","Career & networking events roundup","Curated reading list","Unclassified","No caption"];
+const DP = [["Morning (&lt;12)"],["Midday (12–14)"],["Afternoon (15–17)"],["Evening (18+)"]];
+Chart.defaults.font.family = getComputedStyle(document.body).fontFamily;
+Chart.defaults.color = "#4A4F66";
+Chart.defaults.animation = false;
+Chart.defaults.maintainAspectRatio = false;
+
+const $ = id => document.getElementById(id);
+const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const fmtN = v => v == null || isNaN(v) ? "—" : Math.round(v).toLocaleString("en-US");
+const fmtP = v => v == null || isNaN(v) ? "—" : (v*100).toFixed(1) + "%";
+function median(a){ a = a.filter(v => v != null && !isNaN(v)).sort((x,y)=>x-y); if(!a.length) return null; const m = a.length>>1; return a.length%2 ? a[m] : (a[m-1]+a[m])/2; }
+const rate = p => (p.x != null && p.i > 0) ? p.x / p.i : null;
+const P = DATA.posts;
+
+// ---------- filters ----------
+const state = {from:"", to:"", nets:new Set(NETS), topic:"all", format:"all", student:"all"};
+function fill(sel, vals, allLabel){ $(sel).innerHTML = `<option value="all">${allLabel}</option>` + vals.map(v=>`<option>${esc(v)}</option>`).join(""); }
+fill("fTopic", TOPICS.filter(t => P.some(p=>p.t===t)), "All topics");
+fill("fFormat", [...new Set(P.map(p=>p.f))].sort(), "All formats");
+$("fNets").innerHTML = NETS.map(n=>`<label><input type="checkbox" value="${n}" checked><span class="dot" style="background:${COL[n]}"></span>${NAME[n]}</label>`).join("");
+const allM = [...new Set(P.map(p=>p.m))].sort();
+["fFrom","fTo"].forEach((id,k) => $(id).innerHTML = `<option value="">${k?"Latest":"Earliest"}</option>` + allM.map(m=>`<option>${m}</option>`).join(""));
+function readFilters(){
+  state.from = $("fFrom").value; state.to = $("fTo").value;
+  state.nets = new Set([...$("fNets").querySelectorAll("input:checked")].map(i=>i.value));
+  state.topic = $("fTopic").value; state.format = $("fFormat").value; state.student = $("fStudent").value;
+}
+function filtered(opts={}){
+  return P.filter(p =>
+    (!state.from || p.m >= state.from) && (!state.to || p.m <= state.to) &&
+    (opts.allNets || state.nets.has(p.n)) &&
+    (state.topic==="all" || p.t===state.topic) && (state.format==="all" || p.f===state.format) &&
+    (state.student==="all" || (state.student==="yes") === p.s));
+}
+["fFrom","fTo","fTopic","fFormat","fStudent"].forEach(id => $(id).addEventListener("change", update));
+$("fNets").addEventListener("change", update);
+$("reset").onclick = () => { $("fFrom").value=$("fTo").value=""; ["fTopic","fFormat","fStudent"].forEach(id=>$(id).value="all"); $("fNets").querySelectorAll("input").forEach(i=>i.checked=true); update(); };
+
+// ---------- tabs ----------
+let tab = "ov";
+$("nav").addEventListener("click", e => { const b = e.target.closest("button"); if(!b) return;
+  tab = b.dataset.t; document.querySelectorAll("nav button").forEach(x=>x.classList.toggle("on", x===b));
+  document.querySelectorAll(".tab").forEach(s=>s.classList.toggle("on", s.id==="t-"+tab)); render(); });
+
+const charts = {};
+function chart(id, cfg){ if(charts[id]) charts[id].destroy(); charts[id] = new Chart($(id), cfg); }
+const nets = () => NETS.filter(n => state.nets.has(n));
+const grid = {color:"#EEF0F5"};
+
+function update(){ readFilters(); page = 0; render(); }
+function render(){
+  const F = filtered();
+  $("status").textContent = `${F.length.toLocaleString()} posts match`;
+  ({ov:rOverview, pl:rPlatform, tp:rTopics, ft:rFormats, ex:rExplorer})[tab](F);
+}
+
+// ---------- OVERVIEW ----------
+function months(F){ return [...new Set(F.map(p=>p.m))].sort(); }
+function rOverview(F){
+  $("kpis").innerHTML = nets().map(n => { const A = F.filter(p=>p.n===n);
+    return `<div class="card kpi"><h4><span class="dot" style="background:${COL[n]}"></span>${NAME[n]}</h4><div class="row">
+      <div><div class="v">${A.length.toLocaleString()}</div><div class="k">Posts</div></div>
+      <div><div class="v">${fmtN(median(A.map(p=>p.i)))}</div><div class="k">Median impr.</div></div>
+      <div><div class="v">${fmtN(median(A.map(p=>p.x)))}</div><div class="k">Median interact.</div></div>
+      <div><div class="v">${fmtP(median(A.map(rate)))}</div><div class="k">Interact. rate</div></div></div></div>`; }).join("") || `<div class="empty">Select at least one platform.</div>`;
+  const M = months(F);
+  chart("cPosts", {type:"bar", data:{labels:M, datasets:nets().map(n=>({label:NAME[n], backgroundColor:COL[n], data:M.map(m=>F.filter(p=>p.n===n&&p.m===m).length)}))},
+    options:{scales:{x:{stacked:true,grid:{display:false}},y:{stacked:true,beginAtZero:true,grid}},plugins:{legend:{position:"bottom"}}}});
+  chart("cTrend", {type:"line", data:{labels:M, datasets:nets().map(n=>({label:NAME[n], borderColor:COL[n], backgroundColor:COL[n], tension:.25, pointRadius:2, spanGaps:true,
+    data:M.map(m=>{const A=F.filter(p=>p.n===n&&p.m===m); return A.length>=3 ? median(A.map(p=>p.i)) : null;})}))},
+    options:{scales:{x:{grid:{display:false}},y:{beginAtZero:true,grid,ticks:{callback:v=>v.toLocaleString()}}},plugins:{legend:{position:"bottom"}}}});
+  const inRange = m => (!state.from || m >= state.from) && (!state.to || m <= state.to);
+  const FM = DATA.growth.instagram.months.filter(inRange);
+  chart("cFol", {type:"line", data:{labels:FM, datasets:nets().map(n=>{const f=DATA.growth[n]; return {label:NAME[n], borderColor:COL[n], backgroundColor:COL[n], tension:.25, pointRadius:2,
+    data:FM.map(m=>f.rate[f.months.indexOf(m)])};})},
+    options:{scales:{x:{grid:{display:false}},y:{beginAtZero:true,grid,ticks:{callback:v=>v+"%"}}},plugins:{legend:{position:"bottom"}}}});
+  const UM = DATA.us.months.filter(inRange);
+  chart("cUS", {type:"line", data:{labels:UM, datasets:["instagram","facebook"].filter(n=>state.nets.has(n)).map(n=>({label:NAME[n], borderColor:COL[n], backgroundColor:COL[n], tension:.25, pointRadius:2,
+    data:UM.map(m=>DATA.us[n][DATA.us.months.indexOf(m)])}))},
+    options:{scales:{x:{grid:{display:false}},y:{grid,ticks:{callback:v=>v+"%"}}},plugins:{legend:{position:"bottom"}}}});
+}
+
+// ---------- PLATFORM ----------
+function logTick(v){ const e = Math.pow(10, Math.floor(Math.log10(v))), m = Math.round(v / e); return (m===1||m===3) && Math.abs(v - m*e) < 1e-6*e ? (v>=1000 ? (v/1000)+"K" : String(v)) : ""; }
+function groups(F){ const g = {}; F.forEach(p => { if(!p.g) return; (g[p.g] ||= {})[p.n] = p; }); return g; }
+function rPlatform(F){
+  const N = nets();
+  chart("cPlImp", {type:"bar", data:{labels:N.map(n=>NAME[n]), datasets:[{data:N.map(n=>median(F.filter(p=>p.n===n).map(p=>p.i))), backgroundColor:N.map(n=>COL[n]), borderRadius:5}]},
+    options:{plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>fmtN(c.parsed.y)+" impressions (median)"}}},scales:{x:{grid:{display:false}},y:{beginAtZero:true,grid}}}});
+  chart("cPlInt", {type:"bar", data:{labels:N.map(n=>NAME[n]), datasets:[
+      {label:"Median interactions", data:N.map(n=>median(F.filter(p=>p.n===n).map(p=>p.x))), backgroundColor:N.map(n=>COL[n]), borderRadius:5, yAxisID:"y"},
+      {label:"Median interaction rate", type:"line", data:N.map(n=>{const r=median(F.filter(p=>p.n===n).map(rate)); return r==null?null:r*100;}), borderColor:"#1B1F3B", backgroundColor:"#1B1F3B", pointBorderColor:"#fff", pointBorderWidth:2, pointRadius:7, showLine:false, order:-1, yAxisID:"y2"}]},
+    options:{plugins:{legend:{position:"bottom"},tooltip:{callbacks:{label:c=>c.datasetIndex? c.parsed.y.toFixed(1)+"% rate" : fmtN(c.parsed.y)+" interactions"}}},
+      scales:{x:{grid:{display:false}},y:{beginAtZero:true,grid,title:{display:true,text:"Interactions"}},y2:{beginAtZero:true,position:"right",grid:{display:false},title:{display:true,text:"Rate (%)"},ticks:{callback:v=>v+"%"}}}}});
+  // same post IG vs LI — matched on all-network data so platform checkboxes don't break pairs
+  const G = groups(filtered({allNets:true}));
+  const met = $("spMetric").value, lab = met==="i" ? "impressions" : "interactions";
+  const all = Object.values(G).filter(g => g.instagram && g.linkedin && g.instagram[met] != null && g.linkedin[met] != null);
+  const pairs = all.filter(g => g.instagram[met] > 0 && g.linkedin[met] > 0);  // log axes cannot show zeros
+  const igWin = all.filter(g=>g.instagram[met] > g.linkedin[met]).length, liWin = all.filter(g=>g.linkedin[met] > g.instagram[met]).length;
+  const lo = Math.min(...pairs.flatMap(g=>[g.instagram[met], g.linkedin[met]]), 1e9), hi = Math.max(...pairs.flatMap(g=>[g.instagram[met], g.linkedin[met]]), 1);
+  chart("cSP", {type:"scatter", data:{datasets:[
+      {label:"Posts", data:pairs.map(g=>({x:g.linkedin[met], y:g.instagram[met], t:g.linkedin.gt || g.linkedin.t, d:g.linkedin.m})),
+       backgroundColor:pairs.map(g=>g.instagram[met]>g.linkedin[met]?"rgba(193,53,132,.55)":"rgba(10,102,194,.55)"), pointRadius:4, pointHoverRadius:7},
+      {label:"Equal", type:"line", data:[{x:lo,y:lo},{x:hi,y:hi}], borderColor:"#999", borderDash:[5,4], pointRadius:0, borderWidth:1}]},
+    options:{plugins:{legend:{display:false},tooltip:{filter:c=>c.datasetIndex===0,callbacks:{title:c=>c[0].raw.t, label:c=>[`Instagram: ${fmtN(c.raw.y)} · LinkedIn: ${fmtN(c.raw.x)} ${lab}`, c.raw.d]}}},
+      scales:{x:{type:"logarithmic",title:{display:true,text:"LinkedIn "+lab},grid,ticks:{autoSkip:false,maxRotation:0,callback:logTick}},y:{type:"logarithmic",title:{display:true,text:"Instagram "+lab},grid,ticks:{autoSkip:false,callback:logTick}}}}});
+  $("spSum").innerHTML = all.length ? `<b>${all.length}</b> matched posts. Instagram had more ${lab} on <b style="color:var(--ig)">${Math.round(igWin/all.length*100)}%</b>, LinkedIn on <b style="color:var(--li)">${Math.round(liWin/all.length*100)}%</b>. Median: Instagram ${fmtN(median(all.map(g=>g.instagram[met])))} vs LinkedIn ${fmtN(median(all.map(g=>g.linkedin[met])))}.` : "No matched posts under the current filters.";
+  const all3 = Object.values(G).filter(g => NETS.every(n => g[n] && g[n].i > 0 && g[n].x != null));
+  const share = k => NETS.map(n => all3.length ? all3.filter(g => NETS.reduce((b,m)=> g[m][k] > g[b][k] ? m : b, NETS[0]) === n).length / all3.length * 100 : 0);
+  const si = share("i"), sx = share("x");
+  chart("cWin", {type:"bar", data:{labels:[`Most impressions (n=${all3.length})`, `Most interactions (n=${all3.length})`], datasets:NETS.map((n,k)=>({label:NAME[n], backgroundColor:COL[n], data:[si[k], sx[k]]}))},
+    options:{indexAxis:"y", scales:{x:{stacked:true,max:100,grid,ticks:{callback:v=>v+"%"}},y:{stacked:true,grid:{display:false}}}, plugins:{legend:{position:"bottom"},tooltip:{callbacks:{label:c=>`${c.dataset.label}: ${c.parsed.x.toFixed(0)}%`}}}}});
+  // by topic
+  const byT = {}; Object.values(G).filter(g=>g.instagram && g.linkedin && g.instagram.i!=null && g.linkedin.i!=null).forEach(g => (byT[g.linkedin.gt || g.linkedin.t] ||= []).push(g));
+  const rows = Object.entries(byT).sort((a,b)=>b[1].length-a[1].length);
+  $("spTopic").innerHTML = `<thead><tr><th>Topic</th><th class="n">Matched</th><th class="n">IG median impr.</th><th class="n">LI median impr.</th><th class="n">IG more impr.</th><th class="n">LI more interact.</th></tr></thead><tbody>` +
+    rows.map(([t,gs]) => `<tr><td>${esc(t)}${gs.length<10?' <span style="color:var(--muted)">(small)</span>':''}</td><td class="n">${gs.length}</td><td class="n">${fmtN(median(gs.map(g=>g.instagram.i)))}</td><td class="n">${fmtN(median(gs.map(g=>g.linkedin.i)))}</td>
+      <td class="n">${Math.round(gs.filter(g=>g.instagram.i>g.linkedin.i).length/gs.length*100)}%</td><td class="n">${Math.round(gs.filter(g=>g.linkedin.x>g.instagram.x).length/gs.length*100)}%</td></tr>`).join("") + "</tbody>";
+}
+$("spMetric").onchange = render;
+
+// ---------- TOPICS ----------
+function shade(hex, t){ const c=[1,3,5].map(k=>parseInt(hex.slice(k,k+2),16)); return "rgb("+c.map(v=>Math.round(255+(v-255)*t)).join(",")+")"; }
+function rTopics(F){
+  const met = $("hmMetric").value, N = nets();
+  const val = A => met==="rate" ? median(A.map(rate)) : median(A.map(p=>p[met]));
+  const show = v => met==="rate" ? fmtP(v) : fmtN(v);
+  const ts = TOPICS.filter(t => F.some(p=>p.t===t));
+  const cell = {}; N.forEach(n => ts.forEach(t => { const A = F.filter(p=>p.n===n&&p.t===t); cell[n+t] = {n:A.length, v:A.length>=5 ? val(A) : null}; }));
+  const rng = {}; N.forEach(n => { const vs = ts.map(t=>cell[n+t].v).filter(v=>v!=null); rng[n] = [Math.min(...vs), Math.max(...vs)]; });
+  $("hm").innerHTML = `<thead><tr><th>Topic</th>${N.map(n=>`<th style="text-align:center;color:${COL[n]}">${NAME[n]}</th>`).join("")}</tr></thead><tbody>` +
+    ts.map(t => `<tr class="click" data-t="${esc(t)}"><td>${esc(t)}</td>${N.map(n => { const c = cell[n+t];
+      if(c.v==null) return `<td class="c" style="color:var(--muted);font-weight:400">— <small>(n=${c.n})</small></td>`;
+      const [a,b] = rng[n], k = b>a ? .12 + .78*(c.v-a)/(b-a) : .5;
+      return `<td class="c" style="background:${shade(COL[n],k)};color:${k>.55?"#fff":"#1B1F3B"}">${show(c.v)} <small>(n=${c.n})</small></td>`; }).join("")}</tr>`).join("") + "</tbody>";
+  $("hm").querySelectorAll("tr.click").forEach(r => r.onclick = () => { $("fTopic").value = r.dataset.t; update(); });
+  const cmp = (id, key, labels, fn, fmtTick) => chart(id, {type:"bar", data:{labels:N.map(n=>NAME[n]), datasets:labels.map((l,k)=>({label:l, backgroundColor:k? "#B9C1E3" : "#2B2F5B", borderRadius:4,
+      data:N.map(n=>fn(F.filter(p=>p.n===n && p[key]===!k)))}))},
+    options:{plugins:{legend:{position:"bottom"},tooltip:{callbacks:{label:c=>`${c.dataset.label}: ${fmtTick(c.parsed.y)}`}}},scales:{x:{grid:{display:false}},y:{beginAtZero:true,grid,ticks:{callback:fmtTick}}}}});
+  cmp("cStu", "s", ["Student-focused","Other posts"], A=>median(A.map(p=>p.i)), v=>fmtN(v));
+  cmp("cLak", "lk", ["Campus life","Other posts"], A=>{const r=median(A.map(rate)); return r==null?null:r*100;}, v=>v==null?"—":(+v).toFixed(1)+"%");
+  const top = [...F].filter(p=>p.i!=null).sort((a,b)=>b.i-a.i).slice(0,15);
+  $("topPosts").innerHTML = `<thead><tr><th>Month</th><th>Platform</th><th>Topic</th><th>Format</th><th class="n">Impr.</th><th class="n">Interact.</th></tr></thead><tbody>` +
+    top.map(p=>`<tr><td>${p.m}</td><td><span class="pill" style="background:${COL[p.n]}">${NAME[p.n]}</span></td><td>${esc(p.t)}</td><td>${esc(p.f)}</td><td class="n">${fmtN(p.i)}</td><td class="n">${fmtN(p.x)}</td></tr>`).join("") + "</tbody>";
+}
+$("hmMetric").onchange = render;
+
+// ---------- FORMATS & TIMING ----------
+$("gridNet").innerHTML = NETS.map(n=>`<option value="${n}">${NAME[n]}</option>`).join("");
+$("gridNet").onchange = render;
+function rFormats(F){
+  const N = nets();
+  const fm = [...new Set(F.map(p=>p.f))].sort();
+  chart("cFmt", {type:"bar", data:{labels:fm, datasets:N.map(n=>({label:NAME[n], backgroundColor:COL[n], borderRadius:4,
+    data:fm.map(f=>{const A=F.filter(p=>p.n===n&&p.f===f); return A.length>=5?median(A.map(p=>p.i)):null;})}))},
+    options:{plugins:{legend:{position:"bottom"},tooltip:{callbacks:{afterLabel:c=>"n = "+F.filter(p=>p.n===N[c.datasetIndex]&&p.f===c.label).length}}},scales:{x:{grid:{display:false}},y:{beginAtZero:true,grid}}}});
+  const wd = ["Monday","Tuesday","Wednesday","Thursday","Friday","Weekend"], W = DATA.timing;
+  chart("cWd", {type:"bar", data:{labels:wd, datasets:N.map(n=>({label:NAME[n], backgroundColor:COL[n], borderRadius:4, data:wd.map(d=>W[n].wd[d].v)}))},
+    options:{plugins:{legend:{position:"bottom"},tooltip:{callbacks:{afterLabel:c=>"n = "+W[N[c.datasetIndex]].wd[c.label].n}}},scales:{x:{grid:{display:false}},y:{beginAtZero:true,grid}}}});
+  const gn = $("gridNet").value;
+  const cells = wd.map(d => W[gn].grid[d]);
+  const vs = cells.flat().filter(c=>c.n>=10).map(c=>c.v), lo=Math.min(...vs), hi=Math.max(...vs);
+  $("dtGrid").innerHTML = `<thead><tr><th></th>${DP.map(d=>`<th style="text-align:center">${d[0]}</th>`).join("")}</tr></thead><tbody>` +
+    wd.map((d,i)=>`<tr><td><b>${d}</b></td>${cells[i].map(c=>{ if(c.n<10) return `<td class="c" style="background:#F0F1F6;color:var(--muted);font-weight:400">${c.n?fmtN(c.v):"—"} <small>(n=${c.n})</small></td>`;
+      const k = hi>lo ? .12+.78*(c.v-lo)/(hi-lo) : .5; return `<td class="c" style="background:${shade(COL[gn],k)};color:${k>.55?"#fff":"#1B1F3B"}">${fmtN(c.v)} <small>(n=${c.n})</small></td>`; }).join("")}</tr>`).join("") + "</tbody>";
+}
+
+// ---------- EXPLORER ----------
+const COLS = [["m","Month"],["n","Platform"],["t","Topic"],["f","Format"],["i","Impr.",1],["x","Interact.",1],["rate","Rate",1],["r","Reach",1],["ck","Clicks",1]];
+let sortK = "m", sortD = -1, page = 0; const PS = 50;
+function exRows(F){
+  const R = F.map(p => ({...p, rate: rate(p)}));
+  return R.sort((a,b) => { const x=a[sortK], y=b[sortK]; if(x==null) return 1; if(y==null) return -1; return (x<y?-1:x>y?1:0)*sortD; });
+}
+function rExplorer(F){
+  const R = exRows(F), pages = Math.max(1, Math.ceil(R.length/PS)); page = Math.min(page, pages-1);
+  $("ex").innerHTML = `<thead><tr>${COLS.map(([k,l,num])=>`<th class="s${num?" n":""}" data-k="${k}">${l}${sortK===k?(sortD>0?" ▲":" ▼"):""}</th>`).join("")}</tr></thead><tbody>` +
+    R.slice(page*PS, page*PS+PS).map(p=>`<tr><td style="white-space:nowrap">${p.m}</td><td><span class="pill" style="background:${COL[p.n]}">${NAME[p.n]}</span></td>
+      <td>${esc(p.t)}${p.tc==="high"?"":` <span style="color:var(--muted)">(${esc(p.tc)})</span>`}</td><td>${esc(p.f)}</td>
+      <td class="n">${fmtN(p.i)}</td><td class="n">${fmtN(p.x)}</td><td class="n">${fmtP(p.rate)}</td><td class="n">${fmtN(p.r)}</td><td class="n">${fmtN(p.ck)}</td></tr>`).join("") + "</tbody>";
+  $("ex").querySelectorAll("th.s").forEach(th => th.onclick = () => { const k = th.dataset.k; sortD = sortK===k ? -sortD : -1; sortK = k; render(); });
+  $("pager").innerHTML = `Showing ${R.length ? page*PS+1 : 0}–${Math.min(R.length,(page+1)*PS)} of ${R.length.toLocaleString()} <button ${page?"":"disabled"} id="pv">‹ Prev</button><button ${page<pages-1?"":"disabled"} id="nx">Next ›</button>`;
+  if($("pv")) $("pv").onclick = () => { page--; render(); }; if($("nx")) $("nx").onclick = () => { page++; render(); };
+}
+$("csv").onclick = () => {
+  const R = exRows(filtered()), cols = ["month","platform","topic","topic_confidence","format","student_focused","campus_life","impressions","interactions","interaction_rate","reach","clicks"];
+  const q = v => v==null ? "" : /[",\n]/.test(String(v)) ? '"'+String(v).replace(/"/g,'""')+'"' : String(v);
+  const lines = [cols.join(",")].concat(R.map(p=>[p.m,NAME[p.n],p.t,p.tc,p.f,p.s,p.lk,p.i,p.x,p.rate==null?"":p.rate.toFixed(4),p.r,p.ck].map(q).join(",")));
+  const a = document.createElement("a"); a.href = URL.createObjectURL(new Blob(["﻿"+lines.join("\n")],{type:"text/csv"})); a.download = "posts_filtered.csv"; a.click();
+};
+
+$("foot").textContent = `Built ${DATA.built} · ${P.length.toLocaleString()} organic feed posts`;
+render();
+</script>
+</body>
+</html>
