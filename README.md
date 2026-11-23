@@ -1,8 +1,8 @@
-# Social Media Analysis
+# Social Media Performance Analysis
 
-What drives social media performance for a college? An analysis of **1,053 organic feed posts** across Instagram, LinkedIn and Facebook, January 2025 – October 2026.
+A performance analysis of the Instagram, LinkedIn and Facebook accounts I managed for a higher-education brand. It covers **1,053 organic feed posts** from January 2025 to October 2026 and asks what to post, where, and when.
 
-> The organisation is anonymised. Raw exports, captions, post links, post-level records and follower counts are not included. Only code, charts and aggregated results are shared.
+> The brand name and raw data are kept private. This repository shares the code, charts and aggregated results.
 
 **Tools:** Python (pandas, SciPy, matplotlib)
 
@@ -17,7 +17,7 @@ What drives social media performance for a college? An analysis of **1,053 organ
 
 | | Instagram | LinkedIn | Facebook |
 |---|---|---|---|
-| Posts analysed | 334 | 341 | 378 |
+| Posts analyzed | 334 | 341 | 378 |
 | Median impressions per post | **2,050** | 1,042 | 483 |
 | Median interaction rate (÷ impressions) | 2.3% | **3.5%** | 1.2% |
 | Follower growth, Jan 2025 – Oct 2026 | **+76%** | +62% | +20% |
@@ -65,7 +65,7 @@ scripts/
   platform_overview.py   platform summary
 results/charts/          charts
 results/tables/          aggregated results
-org_config.example.json  template for organisation-specific terms
+org_config.example.json  template for organization-specific terms
 ```
 
 ## Run it on your own data

@@ -1,7 +1,7 @@
 """Build a prepared post table with derived topic / CTA / destination fields.
 
 Usage: python -I prepare_posts.py <raw_post_csv> <out_csv> <org_config.json>
-Organisation-specific terms (names, hashtags, programs, domains) live in the config file.
+Organization-specific terms (names, hashtags, programs, domains) live in the config file.
 All derived fields are analysis additions (keyword rules), not source facts.
 """
 import json
@@ -136,7 +136,7 @@ def dest(ds):
     if ds & {"forms.cloud.microsoft", "forms.office.com"}:
         return "Form"
     if CFG["org_domain"] in ds:
-        return "Organisation website"
+        return "Organization website"
     if ds & {"bit.ly", "vist.ly", "lnkd.in"}:
         return "Shortened link (unknown)"
     return "External site"
